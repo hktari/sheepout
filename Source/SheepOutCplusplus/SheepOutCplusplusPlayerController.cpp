@@ -66,23 +66,9 @@ void ASheepOutCplusplusPlayerController::MoveToMouseCursor()
 		
 		if (Hit.bBlockingHit)
 		{
-			IICommandable* commandableActor = nullptr;
-			if (Hit.Actor.IsValid()) 
-			{
-				commandableActor = Cast<IICommandable>(Hit.Actor.Get());
-			}
-
-			if (commandableActor)
-			{
-				commandableActor->Command();
-			}
-			else
-			{
-				// Move to the location
-				SetNewMoveDestination(Hit.ImpactPoint);
-			}
+			// Move to the location
+			SetNewMoveDestination(Hit.ImpactPoint);
 		}
-		
 	}
 }
 
@@ -95,6 +81,10 @@ void ASheepOutCplusplusPlayerController::MoveToTouchLocation(const ETouchIndex::
 	GetHitResultAtScreenPosition(ScreenSpaceLocation, CurrentClickTraceChannel, true, HitResult);
 	if (HitResult.bBlockingHit)
 	{
+		if(TrySelectCommandable(HitResult))
+		{
+			return;
+		}
 		// We hit something, move there
 		SetNewMoveDestination(HitResult.ImpactPoint);
 	}
@@ -117,12 +107,53 @@ void ASheepOutCplusplusPlayerController::SetNewMoveDestination(const FVector Des
 
 void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 {
-	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
+	// Trace to see what is under the mouse cursor
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+
+	if (Hit.bBlockingHit)
+	{
+		if (TrySelectCommandable(Hit))
+		{
+			return;
+		}
+		else
+		{
+			if (selectedMinion)
+			{
+				selectedMinion->Deselect();
+				selectedMinion = nullptr;
+			}
+
+			bMoveToMouseCursor = true;
+		}
+	}
 }
 
 void ASheepOutCplusplusPlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+bool ASheepOutCplusplusPlayerController::TrySelectCommandable(FHitResult hit)
+{
+	IICommandable* commandableActor = nullptr;
+
+	if (hit.Actor.IsValid())
+	{
+		commandableActor = Cast<IICommandable>(hit.Actor.Get());
+	}
+
+	// If commandable actor hit, select it
+	if (commandableActor)
+	{
+		commandableActor->Select();
+		selectedMinion = commandableActor;
+		return true;
+		// TODO: open GUI
+		// TODO: call command with chosen param
+		//commandableActor->Command(0);
+	}
+	return false;
 }

@@ -22,5 +22,11 @@ class SHEEPOUTCPLUSPLUS_API IICommandable
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Command() = 0;
+	virtual void Command(int command) = 0;
+	virtual void ShowUI() = 0;
+	virtual void Select() = 0;
+	virtual void Deselect() = 0;
+	bool IsSelected();
+protected:
+	bool isSelected;
 };

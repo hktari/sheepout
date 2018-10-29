@@ -38,6 +38,10 @@ protected:
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+
+	bool TrySelectCommandable(FHitResult hit);
+private:
+	class IICommandable* selectedMinion = nullptr;
 };
 
 

@@ -2,5 +2,7 @@
 
 #include "ICommandable.h"
 
-
-// Add default functionality here for any IICommandable functions that are not pure virtual.
+bool IICommandable::IsSelected()
+{
+	return isSelected;
+}
