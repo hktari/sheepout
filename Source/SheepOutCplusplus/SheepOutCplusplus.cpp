@@ -5,5 +5,5 @@
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, SheepOutCplusplus, "SheepOutCplusplus" );
 
-DEFINE_LOG_CATEGORY(LogSheepOutCplusplus)
+DEFINE_LOG_CATEGORY(LogSheepError)
  

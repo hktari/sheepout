@@ -4,4 +4,4 @@
 
 #include "CoreMinimal.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSheepOutCplusplus, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogSheepError, Log, All);

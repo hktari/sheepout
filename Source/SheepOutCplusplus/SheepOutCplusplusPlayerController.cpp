@@ -8,6 +8,8 @@
 #include "Engine/World.h"
 #include "Engine/Classes/GameFramework/CharacterMovementComponent.h"
 #include "SheepCharacter.h"
+#include "SheepOutCplusplus.h"
+#include "AIController.h"
 
 ASheepOutCplusplusPlayerController::ASheepOutCplusplusPlayerController()
 {
@@ -113,18 +115,23 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 
 	if (Hit.bBlockingHit)
 	{
-		if (TrySelectCommandable(Hit))
+		if (selectedMinion)
 		{
-			return;
+			// TODO: is interactable object hit ?
+			// if yes: start action
+			// if no: move to position
+			auto sheep = Cast<ASheepCharacter>(selectedMinion);
+			auto aiController = Cast<AAIController>(sheep->GetController());
+			aiController->MoveToLocation(Hit.Location);
+			DeselectCommandable();
 		}
+		else if (TrySelectCommandable(Hit))
+		{
+			// We have selected a minion successfully
+			return;
+		} 
 		else
 		{
-			if (selectedMinion)
-			{
-				selectedMinion->Deselect();
-				selectedMinion = nullptr;
-			}
-
 			bMoveToMouseCursor = true;
 		}
 	}
@@ -156,4 +163,15 @@ bool ASheepOutCplusplusPlayerController::TrySelectCommandable(FHitResult hit)
 		//commandableActor->Command(0);
 	}
 	return false;
+}
+
+void ASheepOutCplusplusPlayerController::DeselectCommandable()
+{
+	if (selectedMinion == nullptr)
+	{
+		UE_LOG(LogSheepError, Error, TEXT("Can't deselect null!"));
+		return;
+	}
+	selectedMinion->Deselect();
+	selectedMinion = nullptr;
 }

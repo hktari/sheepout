@@ -40,8 +40,10 @@ protected:
 	void OnSetDestinationReleased();
 
 	bool TrySelectCommandable(FHitResult hit);
+	void DeselectCommandable();
 private:
 	class IICommandable* selectedMinion = nullptr;
+
 };
 
 
