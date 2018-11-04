@@ -8,6 +8,9 @@ public class SheepOutCplusplus : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule",
+        /* Temporarily added GameplayTasks to workaround 4.12 compilation bug. */
+            "GameplayTasks",
+            "NavigationSystem" });
     }
 }
