@@ -43,8 +43,9 @@ void AAISheepController::UnPossess()
 
 void AAISheepController::MoveToLocation(FVector & location)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Moving"));
+	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo)); 
 	BlackboardComp->SetValueAsVector(TargetLocationKeyName, location);
-	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo));
 }
 
 
@@ -59,13 +60,14 @@ void AAISheepController::Select()
 	}
 }
 
-void AAISheepController::Deselect()
+void AAISheepController::Deselect(bool switchToIdle)
 {
 	auto sheep = Cast<ASheepCharacter>(GetPawn());
 	if (sheep)
 	{
 		m_bIsSelected = false;
 		sheep->SelectionSprite->SetVisibility(false);
-		BlackboardComp->SetValueAsEnum(SheepStateKeyName, 0);
+		if(switchToIdle)
+			BlackboardComp->SetValueAsEnum(SheepStateKeyName, 0);
 	}
 }

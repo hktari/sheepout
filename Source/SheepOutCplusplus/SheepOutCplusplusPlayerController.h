@@ -40,7 +40,7 @@ protected:
 	void OnSetDestinationReleased();
 
 	bool TrySelectCommandable(FHitResult hit);
-	void DeselectCommandable();
+	void DeselectCommandable(bool switchToIdle = true);
 private:
 	class AAISheepController* selectedMinion = nullptr;
 

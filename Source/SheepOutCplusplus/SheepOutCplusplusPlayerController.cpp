@@ -122,7 +122,7 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 			// if yes: start action
 			// if no: move to position
 			selectedMinion->MoveToLocation(Hit.Location);
-			DeselectCommandable();
+			DeselectCommandable(false);
 		}
 		else if (TrySelectCommandable(Hit))
 		{
@@ -168,13 +168,13 @@ bool ASheepOutCplusplusPlayerController::TrySelectCommandable(FHitResult hit)
 	return false;
 }
 
-void ASheepOutCplusplusPlayerController::DeselectCommandable()
+void ASheepOutCplusplusPlayerController::DeselectCommandable(bool switchToIdle)
 {
 	if (selectedMinion == nullptr)
 	{
 		UE_LOG(LogSheepError, Error, TEXT("Can't deselect null!"));
 		return;
 	}
-	selectedMinion->Deselect();
+	selectedMinion->Deselect(switchToIdle);
 	selectedMinion = nullptr;
 }

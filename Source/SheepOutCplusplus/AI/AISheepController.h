@@ -11,9 +11,9 @@ class UBehaviorTreeComponent;
 UENUM(BlueprintType)
 enum class ESheepStates : uint8
 {
-	Idle,
-	Selected,
-	MoveTo
+	Idle UMETA(DisplayName = "Idle"),
+	Selected UMETA(DisplayName = "Selected"),
+	MoveTo UMETA(DisplayName = "MoveTo")
 };
 /**
  * 
@@ -47,7 +47,7 @@ public:
 	UBlackboardComponent* GetBlackbardComp() { return BlackboardComp; }
 
 	void Select();
-	void Deselect();
+	void Deselect(bool switchToIdle = true);
 
 	bool GetIsSelected() { return m_bIsSelected; }
 private:
