@@ -25,11 +25,4 @@ public:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	void Select();
-	void Deselect();
-
-	bool GetIsSelected() { return m_bIsSelected; }
-private :
-	bool m_bIsSelected;
 };

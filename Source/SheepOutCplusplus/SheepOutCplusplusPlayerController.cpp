@@ -10,6 +10,7 @@
 #include "SheepCharacter.h"
 #include "SheepOutCplusplus.h"
 #include "AIController.h"
+#include "AI/AISheepController.h"
 
 ASheepOutCplusplusPlayerController::ASheepOutCplusplusPlayerController()
 {
@@ -120,9 +121,7 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 			// TODO: is interactable object hit ?
 			// if yes: start action
 			// if no: move to position
-			auto sheep = Cast<ASheepCharacter>(selectedMinion);
-			auto aiController = Cast<AAIController>(sheep->GetController());
-			aiController->MoveToLocation(Hit.Location);
+			selectedMinion->MoveToLocation(Hit.Location);
 			DeselectCommandable();
 		}
 		else if (TrySelectCommandable(Hit))
@@ -145,19 +144,23 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationReleased()
 
 bool ASheepOutCplusplusPlayerController::TrySelectCommandable(FHitResult hit)
 {
-	IICommandable* commandableActor = nullptr;
+	ASheepCharacter* sheepActor = nullptr;
 
 	if (hit.Actor.IsValid())
 	{
-		commandableActor = Cast<IICommandable>(hit.Actor.Get());
+		sheepActor = Cast<ASheepCharacter>(hit.Actor.Get());
 	}
 
 	// If commandable actor hit, select it
-	if (commandableActor)
+	if (sheepActor)
 	{
-		commandableActor->Select();
-		selectedMinion = commandableActor;
-		return true;
+		auto sheepController = Cast<AAISheepController>(sheepActor->GetController());
+		if (sheepController)
+		{
+			sheepController->Select();
+			selectedMinion = sheepController;
+			return true;
+		}
 		// TODO: open GUI
 		// TODO: call command with chosen param
 		//commandableActor->Command(0);

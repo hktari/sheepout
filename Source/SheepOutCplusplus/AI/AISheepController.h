@@ -8,6 +8,13 @@
 
 class UBehaviorTreeComponent;
 
+UENUM(BlueprintType)
+enum class ESheepStates : uint8
+{
+	Idle,
+	Selected,
+	MoveTo
+};
 /**
  * 
  */
@@ -31,9 +38,18 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetLocationKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName SheepStateKeyName;
 
 	void MoveToLocation(FVector& location);
 
 	UBehaviorTreeComponent* GetBehaviorComp() { return BehaviorComp; }
 	UBlackboardComponent* GetBlackbardComp() { return BlackboardComp; }
+
+	void Select();
+	void Deselect();
+
+	bool GetIsSelected() { return m_bIsSelected; }
+private:
+	bool m_bIsSelected;
 };

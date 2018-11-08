@@ -18,17 +18,4 @@ ASheepCharacter::ASheepCharacter()
 void ASheepCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-void ASheepCharacter::Select()
-{
-	m_bIsSelected = true;
-	SelectionSprite->SetVisibility(true);
-}
-
-void ASheepCharacter::Deselect()
-{
-	m_bIsSelected = false;
-	SelectionSprite->SetVisibility(false);
 }

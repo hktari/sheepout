@@ -42,7 +42,7 @@ protected:
 	bool TrySelectCommandable(FHitResult hit);
 	void DeselectCommandable();
 private:
-	class IICommandable* selectedMinion = nullptr;
+	class AAISheepController* selectedMinion = nullptr;
 
 };
 
