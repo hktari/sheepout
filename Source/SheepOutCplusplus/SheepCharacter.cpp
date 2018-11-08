@@ -21,24 +21,14 @@ void ASheepCharacter::Tick(float DeltaTime)
 
 }
 
-void ASheepCharacter::Command(int command)
-{
-	UE_LOG(LogTemp, Display, TEXT("Commanded"));
-}
-
-void ASheepCharacter::ShowUI()
-{
-	
-}
-
 void ASheepCharacter::Select()
 {
-	isSelected = true;
+	m_bIsSelected = true;
 	SelectionSprite->SetVisibility(true);
 }
 
 void ASheepCharacter::Deselect()
 {
-	isSelected = false;
+	m_bIsSelected = false;
 	SelectionSprite->SetVisibility(false);
 }
