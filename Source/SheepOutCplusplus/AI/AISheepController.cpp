@@ -44,8 +44,8 @@ void AAISheepController::UnPossess()
 void AAISheepController::MoveToLocation(FVector & location)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Moving"));
-	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo)); 
-	BlackboardComp->SetValueAsVector(TargetLocationKeyName, location);
+	BlackboardComp->SetValueAsVector(TargetLocationKeyName, location); 
+	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo));
 }
 
 
