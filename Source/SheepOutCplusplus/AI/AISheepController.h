@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "ICommandable.h"
 #include "AISheepController.generated.h"
 
 class UBehaviorTreeComponent;
@@ -13,13 +14,14 @@ enum class ESheepStates : uint8
 {
 	Idle UMETA(DisplayName = "Idle"),
 	Selected UMETA(DisplayName = "Selected"),
-	MoveTo UMETA(DisplayName = "MoveTo")
+	MoveTo UMETA(DisplayName = "MoveTo"),
+	Interacting UMETA(DisplayName = "Interacting")
 };
 /**
  * 
  */
 UCLASS()
-class SHEEPOUTCPLUSPLUS_API AAISheepController : public AAIController
+class SHEEPOUTCPLUSPLUS_API AAISheepController : public AAIController, public IICommandable
 {
 	GENERATED_BODY()
 
@@ -35,11 +37,14 @@ class SHEEPOUTCPLUSPLUS_API AAISheepController : public AAIController
 	UBlackboardComponent* BlackboardComp;
 
 public:
+	virtual bool StartInteraction(class IInteractable& interactable) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetLocationKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName SheepStateKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName TargetInteractableKeyName;
 
 	void MoveToLocation(FVector& location);
 

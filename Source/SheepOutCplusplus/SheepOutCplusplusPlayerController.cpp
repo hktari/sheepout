@@ -11,6 +11,7 @@
 #include "SheepOutCplusplus.h"
 #include "AIController.h"
 #include "AI/AISheepController.h"
+#include "Interactables/Interactable.h"
 
 ASheepOutCplusplusPlayerController::ASheepOutCplusplusPlayerController()
 {
@@ -120,9 +121,18 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 		{
 			// TODO: is interactable object hit ?
 			// if yes: start action
-			// if no: move to position
-			selectedMinion->MoveToLocation(Hit.Location);
-			DeselectCommandable(false);
+			auto interactableObj = Cast<IInteractable>(Hit.GetActor());
+			if (interactableObj)
+			{
+				Cast<IICommandable>(selectedMinion)->StartInteraction(*interactableObj);
+				UE_LOG(LogTemp, Warning, TEXT("Start interaction"));
+			}
+			else
+			{
+				// if no: move to position
+				selectedMinion->MoveToLocation(Hit.Location);
+				DeselectCommandable(false);
+			}
 		}
 		else if (TrySelectCommandable(Hit))
 		{

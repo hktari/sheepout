@@ -2,7 +2,7 @@
 
 #include "ICommandable.h"
 
-bool IICommandable::IsSelected()
+bool IICommandable::IsInteracting()
 {
-	return isSelected;
+	return m_bIsInteracting;
 }

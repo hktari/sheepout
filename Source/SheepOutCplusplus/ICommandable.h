@@ -20,13 +20,9 @@ class SHEEPOUTCPLUSPLUS_API IICommandable
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Command(int command) = 0;
-	virtual void ShowUI() = 0;
-	virtual void Select() = 0;
-	virtual void Deselect() = 0;
-	bool IsSelected();
+	virtual bool StartInteraction(class IInteractable& interactable) = 0;
+	bool IsInteracting();
 protected:
-	bool isSelected;
+	bool m_bIsInteracting;
 };

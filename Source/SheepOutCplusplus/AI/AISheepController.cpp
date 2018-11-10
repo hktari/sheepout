@@ -6,6 +6,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "PaperSpriteComponent.h"
+#include "Interactables/Interactable.h"
+#include "ICommandable.h"
 
 AAISheepController::AAISheepController(const FObjectInitializer & objectInitializer) 
 	: Super(objectInitializer)
@@ -15,6 +17,7 @@ AAISheepController::AAISheepController(const FObjectInitializer & objectInitiali
 
 	TargetLocationKeyName = "TargetLocation";
 	SheepStateKeyName = "State";
+	TargetInteractableKeyName = "TargetInteractable";
 }
 
 void AAISheepController::Possess(class APawn* inPawn)
@@ -41,6 +44,17 @@ void AAISheepController::UnPossess()
 	
 }
 
+bool AAISheepController::StartInteraction(IInteractable& interactable)
+{
+	if (m_bIsInteracting)
+	{
+		return false;
+	}
+	BlackboardComp->SetValueAsObject(TargetInteractableKeyName, Cast<UObject>(&interactable));
+	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Interacting));
+	return true;
+}
+
 void AAISheepController::MoveToLocation(FVector & location)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Moving"));
@@ -56,7 +70,7 @@ void AAISheepController::Select()
 	{
 		m_bIsSelected = true;
 		sheep->SelectionSprite->SetVisibility(true);
-		BlackboardComp->SetValueAsEnum(SheepStateKeyName, 1);
+		BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Selected));
 	}
 }
 
@@ -68,6 +82,6 @@ void AAISheepController::Deselect(bool switchToIdle)
 		m_bIsSelected = false;
 		sheep->SelectionSprite->SetVisibility(false);
 		if(switchToIdle)
-			BlackboardComp->SetValueAsEnum(SheepStateKeyName, 0);
+			BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Idle));
 	}
 }
