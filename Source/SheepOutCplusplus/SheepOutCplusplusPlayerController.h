@@ -39,10 +39,12 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
-	bool TrySelectCommandable(FHitResult hit);
+	void SelectCommandable(class AAISheepController* sheepController);
 	void DeselectCommandable(bool switchToIdle = true);
 private:
 	class AAISheepController* selectedMinion = nullptr;
+
+	class AAISheepController* GetSheep(FHitResult& hit);
 
 };
 

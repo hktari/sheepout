@@ -8,6 +8,7 @@
 #include "PaperSpriteComponent.h"
 #include "Interactables/Interactable.h"
 #include "ICommandable.h"
+#include "SheepOutCplusplus.h"
 
 AAISheepController::AAISheepController(const FObjectInitializer & objectInitializer) 
 	: Super(objectInitializer)
@@ -62,6 +63,11 @@ void AAISheepController::MoveToLocation(FVector & location)
 	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo));
 }
 
+void AAISheepController::Scare(AActor & guard)
+{
+	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Scared));
+}
+
 
 void AAISheepController::Select()
 {
@@ -93,4 +99,15 @@ ESheepStates AAISheepController::GetSheepState()
 		return static_cast<ESheepStates>(BlackboardComp->GetValueAsEnum(SheepStateKeyName));
 	}
 	return ESheepStates::Idle;
+}
+
+bool AAISheepController::CanBeSelected()
+{
+	if (!BlackboardComp)
+	{
+		UE_LOG(LogSheepError, Warning, TEXT("No blackboard component."));
+		return false;
+	}
+	ESheepStates sheepState = static_cast<ESheepStates>(BlackboardComp->GetValueAsEnum(SheepStateKeyName));
+	return sheepState != ESheepStates::Scared;
 }

@@ -85,9 +85,13 @@ void ASheepOutCplusplusPlayerController::MoveToTouchLocation(const ETouchIndex::
 	GetHitResultAtScreenPosition(ScreenSpaceLocation, CurrentClickTraceChannel, true, HitResult);
 	if (HitResult.bBlockingHit)
 	{
-		if(TrySelectCommandable(HitResult))
+		if(auto sheep = GetSheep(HitResult))
 		{
-			return;
+			if (sheep->CanBeSelected())
+			{
+				SelectCommandable(sheep);
+				return;
+			}
 		}
 		// We hit something, move there
 		SetNewMoveDestination(HitResult.ImpactPoint);
@@ -125,6 +129,7 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 			if (interactableObj)
 			{
 				Cast<IICommandable>(selectedMinion)->StartInteraction(*interactableObj);
+				DeselectCommandable(false);
 				UE_LOG(LogTemp, Warning, TEXT("Start interaction"));
 			}
 			else
@@ -134,10 +139,14 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationPressed()
 				DeselectCommandable(false);
 			}
 		}
-		else if (TrySelectCommandable(Hit))
+		else if (auto sheep = GetSheep(Hit))
 		{
-			// We have selected a minion successfully
-			return;
+			if (sheep->CanBeSelected())
+			{
+				SelectCommandable(sheep);
+				// We have selected a minion successfully
+				return;
+			}
 		} 
 		else
 		{
@@ -152,30 +161,16 @@ void ASheepOutCplusplusPlayerController::OnSetDestinationReleased()
 	bMoveToMouseCursor = false;
 }
 
-bool ASheepOutCplusplusPlayerController::TrySelectCommandable(FHitResult hit)
+void ASheepOutCplusplusPlayerController::SelectCommandable(AAISheepController* sheepController)
 {
-	ASheepCharacter* sheepActor = nullptr;
-
-	if (hit.Actor.IsValid())
+	if (sheepController)
 	{
-		sheepActor = Cast<ASheepCharacter>(hit.Actor.Get());
+		sheepController->Select();
+		selectedMinion = sheepController;
 	}
-
-	// If commandable actor hit, select it
-	if (sheepActor)
-	{
-		auto sheepController = Cast<AAISheepController>(sheepActor->GetController());
-		if (sheepController)
-		{
-			sheepController->Select();
-			selectedMinion = sheepController;
-			return true;
-		}
-		// TODO: open GUI
-		// TODO: call command with chosen param
+	// TODO: open GUI
+	// TODO: call command with chosen param
 		//commandableActor->Command(0);
-	}
-	return false;
 }
 
 void ASheepOutCplusplusPlayerController::DeselectCommandable(bool switchToIdle)
@@ -187,4 +182,13 @@ void ASheepOutCplusplusPlayerController::DeselectCommandable(bool switchToIdle)
 	}
 	selectedMinion->Deselect(switchToIdle);
 	selectedMinion = nullptr;
+}
+
+AAISheepController * ASheepOutCplusplusPlayerController::GetSheep(FHitResult & hit)
+{
+	if (auto sheepActor = Cast<ASheepCharacter>(hit.GetActor()))
+	{
+		return Cast<AAISheepController>(sheepActor->GetController());
+	}
+	return nullptr;
 }

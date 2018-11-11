@@ -15,7 +15,8 @@ enum class ESheepStates : uint8
 	Idle UMETA(DisplayName = "Idle"),
 	Selected UMETA(DisplayName = "Selected"),
 	MoveTo UMETA(DisplayName = "MoveTo"),
-	Interacting UMETA(DisplayName = "Interacting")
+	Interacting UMETA(DisplayName = "Interacting"),
+	Scared UMETA(DisplayName = "Scared")
 };
 /**
  * 
@@ -47,6 +48,7 @@ public:
 		FName TargetInteractableKeyName;
 
 	void MoveToLocation(FVector& location);
+	void Scare(AActor& guard);
 
 	UBehaviorTreeComponent* GetBehaviorComp() { return BehaviorComp; }
 	UBlackboardComponent* GetBlackbardComp() { return BlackboardComp; }
@@ -57,6 +59,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ESheepStates GetSheepState();
 
+	bool CanBeSelected();
 	bool GetIsSelected() { return m_bIsSelected; }
 private:
 	bool m_bIsSelected;
