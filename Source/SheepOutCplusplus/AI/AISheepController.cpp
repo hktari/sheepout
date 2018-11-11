@@ -19,6 +19,7 @@ AAISheepController::AAISheepController(const FObjectInitializer & objectInitiali
 	TargetLocationKeyName = "TargetLocation";
 	SheepStateKeyName = "State";
 	TargetInteractableKeyName = "TargetInteractable";
+	CooldownKeyName = "Cooldown";
 }
 
 void AAISheepController::Possess(class APawn* inPawn)
@@ -31,6 +32,7 @@ void AAISheepController::Possess(class APawn* inPawn)
 		if (sheep->BehaviorTree->BlackboardAsset)
 		{
 			BlackboardComp->InitializeBlackboard(*sheep->BehaviorTree->BlackboardAsset);
+			BlackboardComp->SetValueAsFloat(CooldownKeyName, Cooldown);
 		}
 		BehaviorComp->StartTree(*sheep->BehaviorTree);
 	}

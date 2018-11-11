@@ -40,6 +40,11 @@ class SHEEPOUTCPLUSPLUS_API AAISheepController : public AAIController, public II
 public:
 	virtual bool StartInteraction(class IInteractable& interactable) override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Sheep")
+		float Cooldown = 10.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName CooldownKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetLocationKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
