@@ -85,3 +85,12 @@ void AAISheepController::Deselect(bool switchToIdle)
 			BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Idle));
 	}
 }
+
+ESheepStates AAISheepController::GetSheepState()
+{
+	if (BlackboardComp)
+	{
+		return static_cast<ESheepStates>(BlackboardComp->GetValueAsEnum(SheepStateKeyName));
+	}
+	return ESheepStates::Idle;
+}

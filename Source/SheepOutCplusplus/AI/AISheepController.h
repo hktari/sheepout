@@ -54,6 +54,9 @@ public:
 	void Select();
 	void Deselect(bool switchToIdle = true);
 
+	UFUNCTION(BlueprintCallable)
+	ESheepStates GetSheepState();
+
 	bool GetIsSelected() { return m_bIsSelected; }
 private:
 	bool m_bIsSelected;
