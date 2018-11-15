@@ -15,7 +15,6 @@ class SHEEPOUTCPLUSPLUS_API UBTTask_SetSheepState : public UBTTask_BlackboardBas
 {
 	GENERATED_BODY()
 	
-	/** fixed distance added to threshold between AI and goal location in destination reach test */
 	UPROPERTY(Category = Node, EditAnywhere)
 	TEnumAsByte<ESheepStates> State;
 

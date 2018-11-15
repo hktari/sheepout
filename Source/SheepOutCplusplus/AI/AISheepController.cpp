@@ -49,25 +49,30 @@ void AAISheepController::UnPossess()
 
 bool AAISheepController::StartInteraction(IInteractable& interactable)
 {
-	if (m_bIsInteracting)
+	if (GetSheepState() == ESheepStates::Interacting)
 	{
 		return false;
 	}
 	BlackboardComp->SetValueAsObject(TargetInteractableKeyName, Cast<UObject>(&interactable));
-	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Interacting));
+	SetSheepState(ESheepStates::StartingInteraction);
 	return true;
+}
+
+bool AAISheepController::IsInteracting()
+{
+	return GetSheepState() == ESheepStates::Interacting;
 }
 
 void AAISheepController::MoveToLocation(FVector & location)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Moving"));
 	BlackboardComp->SetValueAsVector(TargetLocationKeyName, location); 
-	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::MoveTo));
+	SetSheepState(ESheepStates::MoveTo);
 }
 
 void AAISheepController::Scare(AActor & guard)
 {
-	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Scared));
+	SetSheepState(ESheepStates::Scared);
 }
 
 
@@ -78,7 +83,7 @@ void AAISheepController::Select()
 	{
 		m_bIsSelected = true;
 		sheep->SelectionSprite->SetVisibility(true);
-		BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Selected));
+		SetSheepState(ESheepStates::Selected);
 	}
 }
 
@@ -90,17 +95,26 @@ void AAISheepController::Deselect(bool switchToIdle)
 		m_bIsSelected = false;
 		sheep->SelectionSprite->SetVisibility(false);
 		if(switchToIdle)
-			BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(ESheepStates::Idle));
+			SetSheepState(ESheepStates::Idle);
 	}
 }
 
 ESheepStates AAISheepController::GetSheepState()
 {
-	if (BlackboardComp)
+	if (BlackboardComp && BlackboardComp->HasBeenInitialized())
 	{
 		return static_cast<ESheepStates>(BlackboardComp->GetValueAsEnum(SheepStateKeyName));
 	}
 	return ESheepStates::Idle;
+}
+
+void AAISheepController::SetSheepState(ESheepStates state)
+{
+	if (!BlackboardComp || !BlackboardComp->HasBeenInitialized())
+	{
+		UE_LOG(LogSheepError, Fatal, TEXT("Blackboard not initialized"));
+	}
+	BlackboardComp->SetValueAsEnum(SheepStateKeyName, static_cast<uint8>(state));
 }
 
 bool AAISheepController::CanBeSelected()

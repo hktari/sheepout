@@ -22,7 +22,5 @@ class SHEEPOUTCPLUSPLUS_API IICommandable
 
 public:
 	virtual bool StartInteraction(class IInteractable& interactable) = 0;
-	bool IsInteracting();
-protected:
-	bool m_bIsInteracting;
+	virtual bool IsInteracting() = 0;
 };

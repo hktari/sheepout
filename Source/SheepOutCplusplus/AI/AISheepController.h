@@ -15,6 +15,7 @@ enum class ESheepStates : uint8
 	Idle UMETA(DisplayName = "Idle"),
 	Selected UMETA(DisplayName = "Selected"),
 	MoveTo UMETA(DisplayName = "MoveTo"),
+	StartingInteraction UMETA(DisplayName = "StartingInteraction"),
 	Interacting UMETA(DisplayName = "Interacting"),
 	Scared UMETA(DisplayName = "Scared")
 };
@@ -39,6 +40,7 @@ class SHEEPOUTCPLUSPLUS_API AAISheepController : public AAIController, public II
 
 public:
 	virtual bool StartInteraction(class IInteractable& interactable) override;
+	virtual bool IsInteracting() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sheep")
 		float Cooldown = 10.0f;
@@ -68,4 +70,6 @@ public:
 	bool GetIsSelected() { return m_bIsSelected; }
 private:
 	bool m_bIsSelected;
+
+	void SetSheepState(ESheepStates state);
 };

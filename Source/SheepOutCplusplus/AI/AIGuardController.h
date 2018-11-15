@@ -39,6 +39,8 @@ private:
 	UBehaviorTreeComponent* m_pBehaviorComp;
 	UBlackboardComponent* m_pBlackboardComp;
 
+	TWeakObjectPtr<class AAISheepController> m_wpSheepController;
+
 	/* Triggered by pawn sensing component when a pawn is spotted */
 	/* When using functions as delegates they need to be marked with UFUNCTION(). We assign this function to FSeePawnDelegate */
 	UFUNCTION()
@@ -48,6 +50,8 @@ private:
 		void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
 
 public:
+	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION(BlueprintCallable)
 	EGuardStates GetState();
 

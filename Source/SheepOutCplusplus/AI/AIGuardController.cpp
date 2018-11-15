@@ -7,12 +7,16 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "SheepCharacter.h"
+#include "AI/AISheepController.h"
 
-AAIGuardController::AAIGuardController(const FObjectInitializer & objectInitializer)
+AAIGuardController::AAIGuardController(const FObjectInitializer & objectInitializer) 
+	: m_wpSheepController(nullptr)
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
 	m_pBehaviorComp = objectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));
 	m_pBlackboardComp = objectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackboardComp"));
-
+	
 	StateKeyName = "State";
 	TargetKeyName = "Target";
 }
@@ -69,9 +73,11 @@ void AAIGuardController::OnSeePawn(APawn* Pawn)
 
 	if (ASheepCharacter* sheep = Cast<ASheepCharacter>(Pawn))
 	{
-		m_pBlackboardComp->SetValueAsObject(TargetKeyName, Pawn);
-		m_pBlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EGuardStates::Herding));
-		UE_LOG(LogTemp, Warning, TEXT("I see you "));
+		if (auto sheepController = Cast<AAISheepController>(sheep->GetController()))
+		{
+			m_wpSheepController = sheepController;
+			UE_LOG(LogTemp, Warning, TEXT("I see you "));
+		}
 	}
 }
 
@@ -96,4 +102,21 @@ void AAIGuardController::OnHearNoise(APawn* PawnInstigator, const FVector& Locat
 	{
 		AIController->SetTargetEnemy(PawnInstigator);
 	}*/
+}
+
+void AAIGuardController::Tick(float DeltaTime)
+{
+	auto state = static_cast<EGuardStates>(m_pBlackboardComp->GetValueAsEnum(StateKeyName));
+	if (state != EGuardStates::Herding)
+	{
+		if (m_wpSheepController.IsValid())
+		{
+			auto aiController = m_wpSheepController.Get();
+			if (aiController->IsInteracting())
+			{
+				m_pBlackboardComp->SetValueAsObject(TargetKeyName, aiController->GetPawn());
+				m_pBlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EGuardStates::Herding));
+			}
+		}
+	}
 }
