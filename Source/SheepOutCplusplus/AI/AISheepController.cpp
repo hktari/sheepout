@@ -33,6 +33,7 @@ void AAISheepController::Possess(class APawn* inPawn)
 		{
 			BlackboardComp->InitializeBlackboard(*sheep->BehaviorTree->BlackboardAsset);
 			BlackboardComp->SetValueAsFloat(CooldownKeyName, Cooldown);
+			BlackboardComp->SetValueAsObject("SelfActor", sheep);
 		}
 		BehaviorComp->StartTree(*sheep->BehaviorTree);
 	}
