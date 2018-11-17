@@ -26,9 +26,16 @@ public:
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+		float CameraNearPlane;
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+		float CameraFarPlane;
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+		float CameraWidth;
+
 private:
 	/** Top down camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* TopDownCameraComponent;
 
 	/** Camera boom positioning the camera above the character */

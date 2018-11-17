@@ -36,10 +36,19 @@ APlayerCharacter::APlayerCharacter()
 	CameraBoom->RelativeRotation = FRotator(-60.f, 0.f, 0.f);
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
+	CameraNearPlane = 0.0f;
+	CameraFarPlane = 2000.0f;
+	CameraWidth = 1450.0f;
+
 	// Create a camera...
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	TopDownCameraComponent->SetProjectionMode(ECameraProjectionMode::Orthographic);
+
+	TopDownCameraComponent->SetOrthoNearClipPlane(CameraNearPlane);
+	TopDownCameraComponent->SetOrthoFarClipPlane(CameraFarPlane);
+	TopDownCameraComponent->SetOrthoWidth(CameraWidth);
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
