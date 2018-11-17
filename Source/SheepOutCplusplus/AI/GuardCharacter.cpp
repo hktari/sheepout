@@ -5,6 +5,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "AI/AIGuardController.h"
 #include "SheepCharacter.h"
+#include "Components/SphereComponent.h"
 
 AGuardCharacter::AGuardCharacter()
 {
@@ -16,6 +17,12 @@ AGuardCharacter::AGuardCharacter()
 	SelectionSprite = CreateDefaultSubobject<UPaperSpriteComponent>("SelectionSprite");
 	SelectionSprite->AttachTo(RootComponent);
 	SelectionSprite->SetVisibility(false);
+
+	SheepShield = CreateDefaultSubobject<USphereComponent>(TEXT("SheepShield"));
+	SheepShield->InitSphereRadius(10.0f);
+	SheepShield->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	SheepShield->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	SheepShield->SetupAttachment(RootComponent);
 }
 
 void AGuardCharacter::BeginPlay()

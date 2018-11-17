@@ -53,6 +53,8 @@ public:
 		FName SheepStateKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetInteractableKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName ScaryGuardKeyName;
 
 	void MoveToLocation(FVector& location);
 	void Scare(AActor& guard);

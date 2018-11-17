@@ -20,6 +20,7 @@ AAISheepController::AAISheepController(const FObjectInitializer & objectInitiali
 	SheepStateKeyName = "State";
 	TargetInteractableKeyName = "TargetInteractable";
 	CooldownKeyName = "Cooldown";
+	ScaryGuardKeyName = "ScaryGuard";
 }
 
 void AAISheepController::Possess(class APawn* inPawn)
@@ -73,6 +74,7 @@ void AAISheepController::MoveToLocation(FVector & location)
 
 void AAISheepController::Scare(AActor & guard)
 {
+	BlackboardComp->SetValueAsObject(ScaryGuardKeyName, &guard);
 	SetSheepState(ESheepStates::Scared);
 }
 
