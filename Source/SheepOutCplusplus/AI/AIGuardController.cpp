@@ -19,6 +19,7 @@ AAIGuardController::AAIGuardController(const FObjectInitializer & objectInitiali
 	
 	StateKeyName = "State";
 	TargetKeyName = "Target";
+	HomLocationKeyName = "HomeLocation";	
 }
 
 void AAIGuardController::Possess(APawn * InPawn)
@@ -33,6 +34,8 @@ void AAIGuardController::Possess(APawn * InPawn)
 			if (behaviorTree->BlackboardAsset)
 			{
 				m_pBlackboardComp->InitializeBlackboard(*behaviorTree->BlackboardAsset);
+
+				m_pBlackboardComp->SetValueAsVector(HomLocationKeyName, InPawn->GetActorLocation());
 			}
 			
 			/* This is the earliest moment we can bind our delegates to the component */

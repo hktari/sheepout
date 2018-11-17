@@ -34,6 +34,8 @@ class SHEEPOUTCPLUSPLUS_API AAIGuardController : public AAIController
 		FName StateKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName HomLocationKeyName;
 
 private:
 	UBehaviorTreeComponent* m_pBehaviorComp;
