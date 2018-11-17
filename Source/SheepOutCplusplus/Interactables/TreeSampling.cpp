@@ -38,6 +38,7 @@ bool ATreeSampling::StartInteraction(IICommandable& commandable)
 {
 	// TODO: visual feedback
 
-	return IInteractable::StartInteraction(commandable);
+	//return IInteractable::StartInteraction(commandable);
+	return true;
 }
 
