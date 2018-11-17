@@ -37,8 +37,8 @@ APlayerCharacter::APlayerCharacter()
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	CameraNearPlane = 0.0f;
-	CameraFarPlane = 2000.0f;
-	CameraWidth = 1450.0f;
+	CameraFarPlane = 4000.0f;
+	CameraWidth = 2000.0f;
 
 	// Create a camera...
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
