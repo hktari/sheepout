@@ -4,12 +4,21 @@
 #include "SheepOutCplusplusPlayerController.h"
 #include "SheepOutCplusplusCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "SheepOutCplusplus.h"
 
 ASheepOutCplusplusGameMode::ASheepOutCplusplusGameMode()
 {
 	// use our custom PlayerController class
-	PlayerControllerClass = ASheepOutCplusplusPlayerController::StaticClass();
-
+	static ConstructorHelpers::FClassFinder<AController> PlayerControllerBPClass(TEXT("/Game/TopDownCPP/Blueprints/PlayerController_BP"));
+	if (PlayerControllerBPClass.Class != NULL)
+	{
+		PlayerControllerClass = PlayerControllerBPClass.Class;
+	}
+	else 
+	{
+		UE_LOG(LogSheepError, Warning, TEXT("Player controller BP not found !"));
+	}
+	
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDownCPP/Blueprints/PlayerCharacter"));
 	if (PlayerPawnBPClass.Class != NULL)
