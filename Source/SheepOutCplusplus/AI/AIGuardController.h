@@ -36,12 +36,15 @@ class SHEEPOUTCPLUSPLUS_API AAIGuardController : public AAIController
 		FName TargetKeyName;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName HomLocationKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FTimespan SheepForgetTime;
 
 private:
 	UBehaviorTreeComponent* m_pBehaviorComp;
 	UBlackboardComponent* m_pBlackboardComp;
 
-	TWeakObjectPtr<class AAISheepController> m_wpSheepController;
+	TArray<TWeakObjectPtr<class AAISheepController>> m_wpSheepControllerCollection;
+	TArray<FDateTime> m_dtSheepSeenTimestampCollection;
 
 	/* Triggered by pawn sensing component when a pawn is spotted */
 	/* When using functions as delegates they need to be marked with UFUNCTION(). We assign this function to FSeePawnDelegate */

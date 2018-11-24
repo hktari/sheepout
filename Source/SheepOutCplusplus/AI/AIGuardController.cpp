@@ -10,7 +10,8 @@
 #include "AI/AISheepController.h"
 
 AAIGuardController::AAIGuardController(const FObjectInitializer & objectInitializer) 
-	: m_wpSheepController(nullptr)
+	: m_wpSheepControllerCollection(TArray<TWeakObjectPtr<AAISheepController>>())
+	, m_dtSheepSeenTimestampCollection(TArray<FDateTime>())
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -20,6 +21,8 @@ AAIGuardController::AAIGuardController(const FObjectInitializer & objectInitiali
 	StateKeyName = "State";
 	TargetKeyName = "Target";
 	HomLocationKeyName = "HomeLocation";	
+
+	SheepForgetTime = FTimespan(0, 0, 3);
 }
 
 void AAIGuardController::Possess(APawn * InPawn)
@@ -78,8 +81,18 @@ void AAIGuardController::OnSeePawn(APawn* Pawn)
 	{
 		if (auto sheepController = Cast<AAISheepController>(sheep->GetController()))
 		{
-			m_wpSheepController = sheepController;
-			UE_LOG(LogTemp, Warning, TEXT("I see you "));
+			int32 idx = m_wpSheepControllerCollection.IndexOfByKey(sheep->GetController());
+			if (idx == INDEX_NONE)
+			{
+				m_wpSheepControllerCollection.Add(sheepController);
+				m_dtSheepSeenTimestampCollection.Add(FDateTime::UtcNow());
+				UE_LOG(LogTemp, Warning, TEXT("I see you %s"), *sheepController->GetName());
+			}
+			else 
+			{
+				// Update last seen timestamp
+				m_dtSheepSeenTimestampCollection[idx] = FDateTime::UtcNow();
+			}
 		}
 	}
 }
@@ -112,13 +125,28 @@ void AAIGuardController::Tick(float DeltaTime)
 	auto state = static_cast<EGuardStates>(m_pBlackboardComp->GetValueAsEnum(StateKeyName));
 	if (state != EGuardStates::Herding)
 	{
-		if (m_wpSheepController.IsValid())
+		auto nowTimestamp = FDateTime::UtcNow();
+		for (auto it = m_dtSheepSeenTimestampCollection.CreateIterator(); it; ++it)
 		{
-			auto aiController = m_wpSheepController.Get();
-			if (aiController->IsInteracting())
+			if (nowTimestamp - *it >= SheepForgetTime)
 			{
-				m_pBlackboardComp->SetValueAsObject(TargetKeyName, aiController->GetPawn());
-				m_pBlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EGuardStates::Herding));
+				int32 idx = it.GetIndex();
+				m_dtSheepSeenTimestampCollection.RemoveAt(idx);
+				m_wpSheepControllerCollection.RemoveAt(idx);
+				it--;
+			}
+		}
+
+		for (auto sheepControllerPtr : m_wpSheepControllerCollection)
+		{
+			if (sheepControllerPtr.IsValid())
+			{
+				auto sheepController = sheepControllerPtr.Get();
+				if (sheepController->IsInteracting())
+				{
+					m_pBlackboardComp->SetValueAsObject(TargetKeyName, sheepController->GetPawn());
+					m_pBlackboardComp->SetValueAsEnum(StateKeyName, static_cast<uint8>(EGuardStates::Herding));
+				}
 			}
 		}
 	}
