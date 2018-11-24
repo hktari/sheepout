@@ -30,8 +30,8 @@ class SHEEPOUTCPLUSPLUS_API AGuardCharacter : public APaperCharacter
 	UPawnSensingComponent* m_pPawnSensingComp;
 
 	/** A decal that projects to the cursor location. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Sheep, meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* SheepShield;
+	UPROPERTY(EditAnywhere, Category = Sheep, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* SheepShield;
 
 public:
 	UBehaviorTree* GetBehaviorTree() { return m_pBehaviorTree; }
